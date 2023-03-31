@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+
+mybatis:
+  # mapper.xml location
+  mapper-locations: classpath:mappers/**/*.xml
+  configuration:
+    # db: snake_case, java: camelCase
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: varchar
+    default-fetch-size: 500
+  # @Alias
+  type-aliases-package: coding.toast.playground
+
+logging:
+  charset:
+    console: UTF-8
+  level:
+    root: info
