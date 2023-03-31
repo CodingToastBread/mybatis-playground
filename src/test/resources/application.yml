@@ -1,25 +1,35 @@
 spring:
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: postgres
+#    password: postgres
+  h2:
+    console:
+      enabled: true
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: postgres
-#  main:
-#    web-application-type: none
-#  autoconfigure:
-#    exclude: org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
+    driver-class-name: org.h2.Driver
+    url:  jdbc:h2:mem:toast_bread;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password: 1111
+    ### want to see on your local h2 db? use the following configuration ###
+    #url:  jdbc:h2:tcp://localhost/~/toast_bread;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+  sql:
+    init:
+      mode: always
+      platform: h2
 
 mybatis:
   # mapper.xml location
   mapper-locations: classpath:mappers/**/*.xml
+  # @Alias Class package location
+  type-aliases-package: coding.toast.playground
   configuration:
-    # db: snake_case, java: camelCase
+    # db: snake_case => java: camelCase
     map-underscore-to-camel-case: true
     default-fetch-size: 10
     default-statement-timeout: 5
     jdbc-type-for-null: null
-  # @Alias Package Location
-  type-aliases-package: coding.toast.playground
 
 logging:
   level:
@@ -31,4 +41,3 @@ logging:
     org.springframework.jdbc.core.StatementCreatorUtils: trace
   pattern:
     console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-

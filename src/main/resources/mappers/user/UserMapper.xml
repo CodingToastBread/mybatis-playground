@@ -6,11 +6,11 @@
 
     <select id="list" resultType="User">
         select id, name, phone_number
-        from coding_toast.user
+        from coding_toast."user"
     </select>
 
     <select id="select" parameterType="long" resultType="User">
-        select * from coding_toast.user
+        select * from coding_toast."user"
         where id = #{id}
     </select>
 
