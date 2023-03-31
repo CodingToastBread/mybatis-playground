@@ -55,7 +55,7 @@ logging:
 
 - [schema-h2.sql](src/test/resources/schema-h2.sql)
 
-```postgresql
+```sql
 create schema IF NOT EXISTS coding_toast;
 
 drop table if exists coding_toast.address;
@@ -80,7 +80,7 @@ create table if not exists  coding_toast."user"
 
 - [data-h2.sql](src/test/resources/data-h2.sql)
 
-```postgresql
+```sql
 insert into coding_toast.address (city_name, zipcode)
 values  ('New York', '00000'),
         ('California', '11111'),
