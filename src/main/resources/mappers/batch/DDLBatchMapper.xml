@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="coding.toast.playground.batch.DDLBatchMapper">
+
+    <update id="createTable">
+        create table ${schemaName}.${tableName} (
+            <foreach collection="headerColumnList" separator="," item="item" index="idx">
+                ${item} character varying(20)
+            </foreach>
+        )
+    </update>
+
+    <update id="createTableBatch" parameterType="ExcelLikeDTO">
+        create table "${schemaName}"."${tableName}" (
+            <foreach collection="headerColumnList" separator="," item="item" index="idx">
+                "${item}" character varying(20)
+            </foreach>
+            , geom geometry(multipolygon, 5186)
+        )
+    </update>
+
+
+    <update id="createDynamicTable" parameterType="ExcelLikeDTO">
+    DO
+    $$
+    BEGIN
+        create table "${schemaName}"."${tableName}" (
+            <foreach collection="headerColumnList" separator="," item="item" index="idx">
+                <if test='idx == 0'>
+                    "${item}" character varying(20)
+                </if>
+                <if test='idx != 0'>
+                    "${item}" int
+                </if>
+            </foreach>
+            , geom geometry(point, 5186)
+        );
+        CREATE INDEX "geometry_idx_on_${schemaName}_${tableName}" ON  "${schemaName}"."${tableName}" USING gist (geom);
+    END;
+    $$
+    </update>
+
+    <sql id="headerColumnNm">
+        <foreach collection="headerColumnList" separator="," item="item">
+            "${item}"
+        </foreach>
+    </sql>
+
+
+    <insert id="batchInsert" parameterType="ExcelLikeDTO">
+        insert into "${schemaName}"."${tableName}" (
+        <foreach collection="headerColumnList" separator="," item="item">
+            ${item}
+        </foreach>
+        ) values
+        <foreach collection="bodyColumnList" separator="," item="row">
+            (
+            <foreach collection="row" separator="," item="col" index="idx">
+                #{col}
+            </foreach>
+            )
+        </foreach>
+   </insert>
+
+    <insert id="batchInsertWithJoin" parameterType="ExcelLikeDTO">
+        insert into ${schemaName}.${tableName} (
+        <include refid="headerColumnNm"/>
+        , "geom")
+        select a.*, b.geom from (
+            values
+            <foreach collection="bodyColumnList" separator="," item="row">
+                (
+                    <foreach collection="row" separator="," item="col" index="idx">
+                        #{col}
+                    </foreach>
+                )
+            </foreach>
+        ) as a(<include refid="headerColumnNm"/>)
+        join coding_toast.address b
+        on a.id = b.city_name
+    </insert>
+
+<!--
+alter table ${schemaName}.${tableName}
+    add constraint pk_for_${schemaName}_${tableName} PRIMARY KEY (id);
+-->
+
+</mapper>

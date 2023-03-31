@@ -1,12 +1,10 @@
 package coding.toast.playground.user.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 @Alias("User")
-@Getter @Setter @ToString
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class User {
     private Long id;
 

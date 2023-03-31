@@ -3,14 +3,16 @@ package coding.toast.playground.user;
 import coding.toast.playground.user.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
+@Transactional
 public interface UserMapper {
     List<User> list();
 
-    int createTable(@Param("map") Map<String, String> map);
+    User select(@Param("id") Long id);
 
+    int insert(User user);
 }

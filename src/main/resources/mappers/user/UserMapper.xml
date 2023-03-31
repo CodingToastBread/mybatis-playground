@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="coding.toast.playground.user.UserMapper">
+
+    <select id="list" resultType="User">
+        select id, name, phone_number
+        from coding_toast.user
+    </select>
+
+    <select id="select" parameterType="long" resultType="User">
+        select * from coding_toast.user
+        where id = #{id}
+    </select>
+
+    <insert id="insert">
+        insert into coding_toast."user" (id, name, phone_number)
+        values (default, #{name}, #{phoneNumber});
+    </insert>
+
+</mapper>
