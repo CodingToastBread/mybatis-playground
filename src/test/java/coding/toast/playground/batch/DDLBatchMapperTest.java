@@ -227,16 +227,4 @@ public class DDLBatchMapperTest {
         PropertyPlaceholderHelper propertyHelper = new PropertyPlaceholderHelper("${", "}");
         return propertyHelper.replacePlaceholders(template, placeholderConvertRule);
     }
-    
-    
-    @Test
-    void PlaceHolderTest() {
-        PropertyPlaceholderHelper propertyHelper = new PropertyPlaceholderHelper("${", "}");
-        String s = propertyHelper.replacePlaceholders("hello ${name}, my name is ${myName}!", placeholderName -> switch (placeholderName) {
-            case "name" -> "sam";
-            case "myName" -> "michael";
-            default -> throw new IllegalStateException("Unexpected value: " + placeholderName);
-        });
-        System.out.println("s = " + s);
-    }
 }
