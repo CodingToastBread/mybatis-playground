@@ -49,6 +49,9 @@ logging:
     console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 ```
 
+- some test won't work because of postgresql specific methods. 
+- change 'platform' to 'postgres' and change database connection config to postgres!
+
 <br><br>
 
 ### 2. create sql script for startup initialize
