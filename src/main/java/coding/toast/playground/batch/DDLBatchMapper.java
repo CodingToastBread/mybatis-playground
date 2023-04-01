@@ -22,5 +22,5 @@ public interface DDLBatchMapper {
     int batchInsert(ExcelLikeDTO dto);
 
     int batchInsertWithJoin(ExcelLikeDTO dto);
-
+    
 }

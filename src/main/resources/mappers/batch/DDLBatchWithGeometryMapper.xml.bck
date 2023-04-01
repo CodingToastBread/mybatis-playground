@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="coding.toast.playground.batch.DDLBatchMapper">
+<!-- this file is for backup... -->
+<mapper namespace="coding.toast.playground.batch.DDLBatchWithGeometryMapper">
 
     <update id="createTable">
         create table ${schemaName}.${tableName} (
@@ -22,15 +23,15 @@
     </update>
 
 
+    <!--using geometry column raise error while using embedded h2 database.-->
     <update id="createDynamicTable" parameterType="ExcelLikeDTO">
     DO
     $$
     BEGIN
-        drop table if exists "${schemaName}"."${tableName}";
         create table "${schemaName}"."${tableName}" (
             <foreach collection="headerColumnList" separator="," item="item" index="idx">
                 <if test='idx == 0'>
-                    "${item}" character varying(20) not null constraint "pk_for_${schemaName}_${tableName}" primary key
+                    "${item}" character varying(20)
                 </if>
                 <if test='idx != 0'>
                     "${item}" int
@@ -83,15 +84,9 @@
         on a.id = b.city_name
     </insert>
 
-
-<!--    <insert id="errorInsert">-->
-<!--        insert into ${schemaName}.${tableName} (<include refid="headerColumnNm"/>, "geom")-->
-<!--        values (null, null, null, null, null, null)-->
-<!--    </insert>-->
-
-    <!--
-    alter table ${schemaName}.${tableName}
-        add constraint pk_for_${schemaName}_${tableName} PRIMARY KEY (id);
-    -->
+<!--
+alter table ${schemaName}.${tableName}
+    add constraint pk_for_${schemaName}_${tableName} PRIMARY KEY (id);
+-->
 
 </mapper>
