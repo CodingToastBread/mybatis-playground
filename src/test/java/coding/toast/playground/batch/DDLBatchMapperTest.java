@@ -1,23 +1,29 @@
 package coding.toast.playground.batch;
 
 import coding.toast.playground.batch.dto.ExcelLikeDTO;
+import org.apache.ibatis.annotations.Case;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.PropertyPlaceholderHelper;
 
 import javax.xml.transform.Templates;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * DDLBatchMapper.xml
@@ -72,42 +78,53 @@ public class DDLBatchMapperTest {
         // for table header column list
         tableCreateStrList.addAll(map.getHeaderColumnList());
         
-        jdbcTemplate.execute("""
-        DO $$BEGIN
-            drop table if exists "%s"."%s";
-            create table "%s"."%s" (
-                "%s" character varying(20),
-                "%s" int ,
-                "%s" int ,
-                "%s" int ,
-                "%s" int ,
-                geom geometry(Point, 5186)
-            );
-            alter table "%s"."%s" add constraint "pk_for_%s_%s" primary key (%s);
-            CREATE INDEX "geometry_idx_on_%s_%s" ON  "%s"."%s" USING gist (geom);
-        END$$
-        """.formatted(
-            map.getSchemaName(),
-            map.getTableName(),
-            map.getSchemaName(),
-            map.getTableName(),
-            map.getHeaderColumnList().get(0),
-            map.getHeaderColumnList().get(1),
-            map.getHeaderColumnList().get(2),
-            map.getHeaderColumnList().get(3),
-            map.getHeaderColumnList().get(4),
-            map.getSchemaName(),
-            map.getTableName(),
-            map.getSchemaName(),
-            map.getTableName(),
-            map.getHeaderColumnList().get(0),
-            map.getSchemaName(),
-            map.getTableName(),
-            map.getSchemaName(),
-            map.getTableName()
-        ));
+        // String templateString = """
+        //     DO $$BEGIN
+        //         drop table if exists "%s"."%s";
+        //         create table "%s"."%s" (
+        //             "%s" character varying(20),
+        //             "%s" int ,
+        //             "%s" int ,
+        //             "%s" int ,
+        //             "%s" int ,
+        //             geom geometry(Point, 5186)
+        //         );
+        //         alter table "%s"."%s" add constraint "pk_for_%s_%s" primary key (%s);
+        //         CREATE INDEX "geometry_idx_on_%s_%s" ON  "%s"."%s" USING gist (geom);
+        //     END$$
+        //     """;
+        String templateString = """
+            DO $$BEGIN
+                drop table if exists "${schemaName}"."${tableName}";
+                create table "${schemaName}"."${tableName}" (
+                    "${id}" character varying(20),
+                    "${attr1}" int ,
+                    "${attr2}" int ,
+                    "${attr3}" int ,
+                    "${attr4}" int ,
+                    geom geometry(Point, 5186)
+                );
+                alter table "${schemaName}"."${tableName}"
+                    add constraint "pk_for_${schemaName}_${tableName}" primary key (${id});
+                CREATE INDEX "geometry_idx_on_${schemaName}_${tableName}"
+                    ON  "${schemaName}"."${tableName}" USING gist (geom);
+            END$$
+            """;
+        String ddl = convertPlaceHolder(templateString, (placeholderName -> {
+            return switch (placeholderName) {
+                case "schemaName" -> map.getSchemaName();
+                case "tableName" -> map.getTableName();
+                case "id" -> map.getHeaderColumnList().get(0);
+                case "attr1" -> map.getHeaderColumnList().get(1);
+                case "attr2" -> map.getHeaderColumnList().get(2);
+                case "attr3" -> map.getHeaderColumnList().get(3);
+                case "attr4" -> map.getHeaderColumnList().get(4);
+                default -> throw new IllegalStateException("Unexpected value: " + placeholderName);
+            };
+        }));
         
-        // ddlMapper.createTableBatch(map);
+        System.out.println("ddl = " + ddl);
+        ddlMapper.createTableBatch(map);
         final int headerWidth = map.getHeaderColumnList().size();
         
         String insertHeaderColString = map.getHeaderColumnList()
@@ -142,7 +159,6 @@ public class DDLBatchMapperTest {
         
         jdbcTemplate.batchUpdate(jdbcBatchQuerySqlString, list);
         // jdbcTemplate.batchUpdate(jdbcBatchQuerySqlString, list); // want to test rollback? uncomment this code!
-        
     }
 
     private static String getQuestionMark(int headerWidth) {
@@ -202,7 +218,25 @@ public class DDLBatchMapperTest {
             .build();
             ddlMapper.createDynamicTable(map);
             ddlMapper.batchInsertWithJoin(map);
-            ddlMapper.batchInsertWithJoin(map);// because of created table has a primary key constraint on id column
+            // ddlMapper.batchInsertWithJoin(map);// because of created table has a primary key constraint on id column
                                                 // it will throw exception (DuplicateKey? maybe...), and then rollback every thing.
+    }
+    
+    
+    private String convertPlaceHolder(String template, PropertyPlaceholderHelper.PlaceholderResolver placeholderConvertRule) {
+        PropertyPlaceholderHelper propertyHelper = new PropertyPlaceholderHelper("${", "}");
+        return propertyHelper.replacePlaceholders(template, placeholderConvertRule);
+    }
+    
+    
+    @Test
+    void PlaceHolderTest() {
+        PropertyPlaceholderHelper propertyHelper = new PropertyPlaceholderHelper("${", "}");
+        String s = propertyHelper.replacePlaceholders("hello ${name}, my name is ${myName}!", placeholderName -> switch (placeholderName) {
+            case "name" -> "sam";
+            case "myName" -> "michael";
+            default -> throw new IllegalStateException("Unexpected value: " + placeholderName);
+        });
+        System.out.println("s = " + s);
     }
 }
