@@ -13,6 +13,12 @@ public interface UserMapper {
     List<User> list();
 
     User select(@Param("id") Long id);
+    
+    // List<User> search(@Param("name") String name);
+    
+    List<User> search(User user);
 
     int insert(User user);
+    
+    int delete(User user);
 }

@@ -4,6 +4,12 @@
 
 <mapper namespace="coding.toast.playground.user.UserMapper">
 
+    <delete id="delete">
+        delete
+        from coding_toast."user"
+        where id = #{id}
+    </delete>
+
     <select id="list" resultType="User">
         select id, name, phone_number
         from coding_toast."user"
@@ -12,6 +18,16 @@
     <select id="select" parameterType="long" resultType="User">
         select * from coding_toast."user"
         where id = #{id}
+    </select>
+
+    <select id="search" parameterType="User" resultType="User">
+        <bind name="name" value="@coding.toast.playground.util.EscapeHelper@escape(name)"/>
+        select * from coding_toast."user"
+        <where>
+            <if test="@org.springframework.util.StringUtils@hasText(name)">
+                name like concat('%', #{name}, '%')
+            </if>
+        </where>
     </select>
 
     <insert id="insert">

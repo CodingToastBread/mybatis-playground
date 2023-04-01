@@ -16,7 +16,7 @@ spring:
 #    password: 1111
   sql:
     init:
-      mode: always
+      mode: never
       platform: postgres #h2
 
 mybatis:
@@ -30,6 +30,7 @@ mybatis:
     default-fetch-size: 10
     default-statement-timeout: 5
     jdbc-type-for-null: null
+#    call-setters-on-nulls: true
 
 logging:
   level:
