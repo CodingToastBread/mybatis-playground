@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="coding.toast.playground.selectkey.TestInsertMapper">
+
+
+    <insert id="insertWithSelectKey" parameterType="TestInsertDTO">
+        <selectKey keyProperty="id" resultType="long" order="BEFORE">
+            select nextval('coding_toast.test_insert_sequence')
+        </selectKey>
+        insert into coding_toast.test_insert_table(id, name)
+            values(#{id}, #{name})
+    </insert>
+</mapper>

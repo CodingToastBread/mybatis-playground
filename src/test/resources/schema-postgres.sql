@@ -18,3 +18,12 @@ create table coding_toast."user"
     phone_number varchar(50)
 );
 
+drop table if exists coding_toast."test_insert_table";
+create table coding_toast."test_insert_table" (
+    id int not null,
+    name    varchar(50) not null,
+    constraint test_insert_table_pk primary key (id)
+);
+
+DROP SEQUENCE IF EXISTS CODING_TOAST.TEST_INSERT_SEQUENCE;
+CREATE SEQUENCE CODING_TOAST.TEST_INSERT_SEQUENCE START 200;

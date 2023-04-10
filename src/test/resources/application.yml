@@ -16,8 +16,8 @@ spring:
 #    password: 1111
   sql:
     init:
-      mode: never
-      platform: postgres #h2
+      mode: always
+      platform: postgres
 
 mybatis:
   # mapper.xml location
