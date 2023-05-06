@@ -18,7 +18,7 @@
     <select id="findWithOutParamTypeButHasJdbcType" resultType="NullTestDTO">
         select *
         from coding_toast.null_insert_table a
-        where a.id = #{id}
+        where a.id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="findWithParamTypeString" parameterType="string" resultType="NullTestDTO">
