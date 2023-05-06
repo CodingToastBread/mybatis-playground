@@ -29,7 +29,7 @@ mybatis:
     map-underscore-to-camel-case: true
     default-fetch-size: 10
     default-statement-timeout: 5
-    jdbc-type-for-null: null
+#    jdbc-type-for-null: varchar
 #    call-setters-on-nulls: true
 
 logging:
@@ -38,10 +38,11 @@ logging:
     coding:
       toast:
         playground: debug
+    org.apache.ibatis.logging.jdbc: debug
     org.springframework.jdbc.core.JdbcTemplate: debug
     org.springframework.jdbc.core.StatementCreatorUtils: trace
-    org.springframework:
-      transaction:
-        interceptor: trace
+#    org.springframework:
+#      transaction:
+#        interceptor: trace
   pattern:
     console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

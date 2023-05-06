@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Mapper
-@Transactional
 public interface UserMapper {
     List<User> list();
 

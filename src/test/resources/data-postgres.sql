@@ -8,9 +8,14 @@ values  ('New York', '00000', '010100002042140000ADBF250025CF0D419FC7288FD7A81D4
         ('Oklahoma', '66666', '010100002042140000ADBF250025CF0D419FC7288FD7A81D41');
 
 
-insert into coding_toast."user" (id, name, phone_number)
+insert into coding_toast.users (id, name, phone_number)
 values  (default, 'Charlie Puth', '010-1111-1111'),
         (default, 'Brad Pitt', '010-2222-2222'),
         (default, 'Daniel Radcliffe', '010-3333-3333'),
         (default, 'Freddie Highmore', '010-4444-4444'),
         (default, 'Gary Oldman', '010-5555-5555');
+
+
+insert into coding_toast.null_insert_table(id, name, age)
+values (default, 'Charlie Puth', 23)
+, (default, 'Brad Pitt', 30)

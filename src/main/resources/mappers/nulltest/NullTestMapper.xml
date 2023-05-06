@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="coding.toast.playground.nulltest.NullTestMapper">
+
+
+    <select id="findWithParamType" parameterType="long" resultType="NullTestDTO">
+        select *
+        from coding_toast.null_insert_table a
+        where a.id = #{id}
+    </select>
+
+    <select id="findWithOutParamType" resultType="NullTestDTO">
+        select *
+        from coding_toast.null_insert_table a
+        where a.id = #{id}
+    </select>
+
+    <select id="findWithOutParamTypeButHasJdbcType" resultType="NullTestDTO">
+        select *
+        from coding_toast.null_insert_table a
+        where a.id = #{id}
+    </select>
+
+    <select id="findWithParamTypeString" parameterType="string" resultType="NullTestDTO">
+        select *
+        from coding_toast.null_insert_table a
+        where a.name = #{name}
+    </select>
+
+    <select id="findWithOutParamTypeString" resultType="NullTestDTO">
+        select *
+        from coding_toast.null_insert_table a
+        where a.name = #{name}
+    </select>
+
+    <select id="findWithOutParamTypeButHasJdbcTypeString" resultType="NullTestDTO">
+        select *
+        from coding_toast.null_insert_table a
+        where a.name = #{name,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findWithAge" parameterType="int" resultType="NullTestDTO">
+        select *
+        from coding_toast.null_insert_table a
+        where a.age = #{age}
+    </select>
+
+    <select id="findWithName" parameterType="string" resultType="NullTestDTO">
+        select *
+        from coding_toast.null_insert_table a
+        where a.name = #{name}
+    </select>
+
+    <select id="find" parameterType="NullTestDTO" resultType="NullTestDTO">
+        select *
+        from coding_toast.null_insert_table a
+        <where>
+            AND a.id = #{id}
+            AND a.age = #{age}
+            AND a.name = #{name}
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="NullTestDTO">
+        insert into coding_toast.null_insert_table(id, name, age)
+        values (default, #{name}, #{age});
+    </insert>
+</mapper>

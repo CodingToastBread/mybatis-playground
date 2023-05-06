@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 @Mapper
-@Transactional
 public interface DDLBatchMapper {
 
     // int createTable(@Param("map") Map<String, Object> map);

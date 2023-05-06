@@ -1,4 +1,13 @@
 spring:
+  profiles:
+    active: local
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
@@ -8,16 +17,20 @@ spring:
 mybatis:
   # mapper.xml location
   mapper-locations: classpath:mappers/**/*.xml
+  # @Alias
+  type-aliases-package: coding.toast.playground
+
   configuration:
     # db: snake_case, java: camelCase
     map-underscore-to-camel-case: true
-    jdbc-type-for-null: varchar
+#    jdbc-type-for-null: null
     default-fetch-size: 500
-  # @Alias
-  type-aliases-package: coding.toast.playground
 
 logging:
   charset:
     console: UTF-8
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
   level:
     root: info
+

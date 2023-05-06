@@ -7,8 +7,8 @@ create table if not exists coding_toast.address
     zipcode   varchar(50) not null
 );
 
-drop table if exists coding_toast."user";
-create table if not exists  coding_toast."user"
+drop table if exists coding_toast.users;
+create table if not exists  coding_toast.users
 (
     id           serial
         constraint user_pk
