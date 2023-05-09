@@ -18,4 +18,10 @@ values  (default, 'Charlie Puth', '010-1111-1111'),
 
 insert into coding_toast.null_insert_table(id, name, age)
 values (default, 'Charlie Puth', 23)
-, (default, 'Brad Pitt', 30)
+, (default, 'Brad Pitt', 30);
+
+
+insert into coding_toast.test_sql_injection_table(id, name, age)
+values (1, 'Charlie Puth', 23)
+     , (2, 'Brad Pitt', 30)
+     , (3, 'Gary Oldman', 50);

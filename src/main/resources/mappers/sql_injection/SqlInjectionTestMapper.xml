@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="coding.toast.playground.sql_injection.mapper.SqlInjectionTestMapper">
+
+
+    <select id="selectList" parameterType="SqlInjectionTestDTO" resultType="SqlInjectionTestDTO">
+        select * from coding_toast.test_sql_injection_table
+        where 1=1
+        <if test="@org.springframework.util.StringUtils@hasText(name)">
+            AND NAME = ${name}
+        </if>
+        <if test="@org.springframework.util.StringUtils@hasText(age)">
+            AND NAME = ${age}
+        </if>
+    </select>
+
+    <select id="select" parameterType="SqlInjectionTestDTO" resultType="SqlInjectionTestDTO">
+        select * from coding_toast.test_sql_injection_table
+        where id = ${id}
+        <if test="@org.springframework.util.StringUtils@hasText(name)">
+            AND NAME = ${name}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="SqlInjectionTestDTO">
+        insert into coding_toast.test_sql_injection_table(id, name, age)
+        values(#{id}, #{name}, #{age})
+    </insert>
+</mapper>

@@ -41,3 +41,13 @@ create table coding_toast.null_insert_table
     age  integer,
     constraint null_insert_table_pk primary key (id)
 );
+
+
+-- for SQL Injection Test
+drop table if exists coding_toast.test_sql_injection_table;
+create table coding_toast.test_sql_injection_table
+(
+    id int4 not null,
+    name varchar(50),
+    age int4
+)
