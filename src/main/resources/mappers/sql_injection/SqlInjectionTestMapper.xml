@@ -26,4 +26,14 @@
         insert into coding_toast.test_sql_injection_table(id, name, age)
         values(#{id}, #{name}, #{age})
     </insert>
+
+
+    <select id="testSqlInjection" parameterType="list" resultType="map">
+        <bind name="list" value="@coding.toast.playground.sql_injection.util.MyBatisSqlInjectionCheck@checkList(list)"/>
+        select
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        from (values(1,1,1,1,1,1,1,1)) as tt(a,b,c,d,e,f,g,h)
+    </select>
 </mapper>

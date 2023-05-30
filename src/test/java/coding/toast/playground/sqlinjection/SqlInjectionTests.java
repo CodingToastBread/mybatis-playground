@@ -4,20 +4,24 @@ import coding.toast.playground.sql_injection.dto.SqlInjectionTestDTO;
 import coding.toast.playground.sql_injection.mapper.SqlInjectionTestMapper;
 import coding.toast.playground.sql_injection.service.SqlInjectionService;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.UncategorizedDataAccessException;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Slf4j
@@ -74,6 +78,31 @@ public class SqlInjectionTests {
         });
 
         log.info(uncategorizedDataAccessException.getMessage());
+
+    }
+
+    @Test
+    @Transactional
+    @Commit
+    void preventSqlInjectionRelatedString() {
+
+        String query = "select from table t";
+
+        // ignore case sensitive
+        Pattern compile = Pattern.compile("(?i)(execute|select|from|where|insert|update|delete|create|truncate|drop|sleep|--|;)");
+
+        String s = compile.matcher(query).replaceAll("");
+        System.out.println("s = " + s);
+
+        List<String> list = Arrays.asList(
+                "select * from users",
+                "drop table users",
+                "truncate table users"
+        );
+
+        Map<String, Object> stringObjectMap = mapper.testSqlInjection(list);
+
+        System.out.println("stringObjectMap = " + stringObjectMap);
 
     }
 

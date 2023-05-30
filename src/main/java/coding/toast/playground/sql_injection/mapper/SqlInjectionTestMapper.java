@@ -14,4 +14,6 @@ public interface SqlInjectionTestMapper {
     SqlInjectionTestDTO select(SqlInjectionTestDTO dto);
 
     int insert(SqlInjectionTestDTO dto);
+
+    Map<String, Object> testSqlInjection(List<String> param);
 }
